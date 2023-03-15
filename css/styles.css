@@ -559,3 +559,30 @@ body {
 .footer-social-media-link:is(:hover, :focus) {
   background-color: var(--success-color);
 }
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+  background-color: ;
+}
+
+.backdrop.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.modal {
+  position: absolute;
+  top: 88px;
+  left: 516px;
+  border-radius: 4px;
+  transform: translate(-50%, -50%);
+
+  min-height: 576px;
+  min-width: 408px;
+
+  background-color: var(--main-basic-color);
+}
