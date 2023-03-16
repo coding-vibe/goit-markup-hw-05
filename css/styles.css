@@ -694,6 +694,7 @@ body {
 .modal-close {
   display: block;
   margin-left: auto;
+  padding: 0;
   text-align: center;
   width: 24px;
   height: 24px;
