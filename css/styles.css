@@ -10,6 +10,10 @@
   --header-gap: 40px;
   --footer-gap-margin: 16px;
 
+  /* Transition */
+  --transition-duration: 250ms;
+  --transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
   /* Border */
   --btn-border-radius: 4px;
 
@@ -25,6 +29,8 @@
   --main-basic-color: #ffffff;
   --hero-bg: #2e2f42;
   --hero-bg-gradient: rgba(46, 47, 66, 0.7);
+  --modal-window-color: #fcfcfc;
+  --modal-overlay-color: rgba(46, 47, 66, 0.4);
 
   /* Font */
 
@@ -183,6 +189,11 @@ body {
 
   background-color: var(--primary-brand-color);
   color: var(--main-basic-color);
+
+  transition: box-shadow var(--transition-duration)
+      var(--transition-timing-function),
+    background-color var(--transition-duration)
+      var(--transition-timing-function);
 }
 
 .btn.primary:is(:hover, :focus) {
@@ -199,6 +210,12 @@ body {
 
   background-color: var(--light-backgrounds-color);
   color: var(--primary-brand-color);
+
+  transition: box-shadow var(--transition-duration)
+      var(--transition-timing-function),
+    background-color var(--transition-duration)
+      var(--transition-timing-function),
+    color var(--transition-duration) var(--transition-timing-function);
 }
 
 .btn.secondary:is(:hover, :focus) {
@@ -256,17 +273,60 @@ body {
 
 .header-menu .link,
 .header-menu .active-link {
+  position: relative;
+
   color: var(--title-text-color);
 
   font-weight: var(--med-font);
+
+  transition: color var(--transition-duration) var(--transition-timing-function);
 }
 
-.header-menu .link:is(:hover, :focus) {
+.header-menu .link:is(:hover, :focus),
+.header-menu .active-link:is(:hover, :focus) {
   color: var(--pressed-state-color);
 }
 
-.header-menu .active-link {
-  color: var(--pressed-state-color);
+/* Лінія в меню навігації підсвічується на активній сторінці  */
+.header-menu .active-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  border-radius: 2px;
+
+  display: block;
+  width: 100%;
+  height: 4px;
+
+  background-color: var(--pressed-state-color);
+}
+
+/* Лінія в меню навігації підсвічується при переключенні між назвами сторінок сайту*/
+.header-menu .link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  border-radius: 2px;
+
+  display: block;
+  width: 100%;
+  height: 4px;
+
+  background-color: var(--pressed-state-color);
+
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: center left;
+  transition: transform var(--transition-duration)
+      var(--transition-timing-function),
+    opacity var(--transition-duration) var(--transition-timing-function);
+}
+
+.header-menu .link:hover::after {
+  opacity: 1;
+  transform: scaleX(1);
 }
 
 /* Contacts */
@@ -279,6 +339,8 @@ body {
 .header-contacts-mailto,
 .header-contacts-tel {
   color: var(--primary-text-color);
+
+  transition: color var(--transition-duration) var(--transition-timing-function);
 }
 
 .header-contacts-mailto:is(:hover, :focus),
@@ -345,6 +407,7 @@ body {
   margin-bottom: var(--p-margin-top-bottom);
 
   background-color: var(--light-backgrounds-color);
+  border-radius: 4px;
 }
 
 /* Our Flow */
@@ -408,6 +471,9 @@ body {
 
   background-color: var(--primary-brand-color);
   border-radius: 50%;
+
+  transition: background-color var(--transition-duration)
+    var(--transition-timing-function);
 }
 
 .social-media-link:is(:hover, :focus) {
@@ -432,14 +498,18 @@ body {
 
 .customers-link {
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   width: 100%;
   height: 100%;
 
   fill: var(--subtle-text-color);
   border: 1px solid var(--subtle-text-color);
   border-radius: 4px;
+
+  transition: border-color var(--transition-duration)
+      var(--transition-timing-function),
+    fill var(--transition-duration) var(--transition-timing-function);
 }
 
 .customers-link:is(:hover, :focus) {
@@ -478,11 +548,37 @@ body {
   background: var(--main-basic-color);
 
   width: calc((100% - 48px) / 3);
+
+  transition: box-shadow var(--transition-duration)
+    var(--transition-timing-function);
 }
 
 .portfolio-item:hover {
   box-shadow: 0px 1px 6px rgba(46, 47, 66, 0.08),
     0px 1px 1px rgba(46, 47, 66, 0.16), 0px 2px 1px rgba(46, 47, 66, 0.08);
+}
+
+.portfolio-item:hover .portfolio-project-desc {
+  transform: translateY(0%);
+}
+
+.portfolio-project-img {
+  position: relative;
+  overflow: hidden;
+}
+
+.portfolio-project-desc {
+  position: absolute;
+  top: 0;
+  padding: 40px 32px 0;
+  height: 100%;
+
+  color: var(--light-backgrounds-color);
+  background-color: var(--primary-brand-color);
+
+  transform: translateY(100%);
+  transition: transform var(--transition-duration)
+    var(--transition-timing-function);
 }
 
 .portfolio-item-content {
@@ -549,8 +645,78 @@ body {
 
   background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
+
+  transition: background-color var(--transition-duration)
+    var(--transition-timing-function);
 }
 
 .footer-social-media-link:is(:hover, :focus) {
   background-color: var(--success-color);
+}
+
+/* Backdrop */
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--modal-overlay-color);
+  transition: opacity var(--transition-duration)
+      var(--transition-timing-function),
+    visibility var(--transition-duration) var(--transition-timing-function);
+}
+
+/* Modal */
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1) rotate(360deg);
+  width: 408px;
+  min-height: 576px;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.14), 0px 1px 3px rgba(0, 0, 0, 0.12),
+    0px 2px 1px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  padding: 24px;
+
+  background-color: var(--modal-window-color);
+
+  transition: transform var(--transition-duration)
+    var(--transition-timing-function);
+}
+
+.backdrop.is-hidden .modal {
+  transform: translate(-50%, -50%) scale(0) rotate(0);
+}
+
+.modal-close {
+  display: block;
+  margin-left: auto;
+  text-align: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+
+  background: var(--light-backgrounds-color);
+  fill: #000000;
+
+  transition: background-color var(--transition-duration)
+      var(--transition-timing-function),
+    fill var(--transition-duration) var(--transition-timing-function);
+
+  cursor: pointer;
+}
+
+.modal-close:is(:hover, :focus) {
+  background: var(--pressed-state-color);
+  fill: var(--main-basic-color);
+}
+
+.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
 }
